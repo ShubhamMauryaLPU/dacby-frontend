@@ -36,36 +36,26 @@ The scheduler trigger endpoint expects the secret in the `x-scheduler-secret` he
 Create a `.env` file in the project root:
 
 ```env
-VITE_API_BASE_URL=http://localhost:3000/api
+VITE_API_BASE_URL=https://dacby-backend-kmf7.onrender.com/api
 ```
 
-If `VITE_API_BASE_URL` is not set, the app falls back to `http://localhost:3000/api`.
+If `VITE_API_BASE_URL` is not set, the app falls back to `https://dacby-backend-kmf7.onrender.com/api`.
 
 ## Local Development
-
 1. Install dependencies:
 
-```bash
-npm install
-```
+    npm install
 
 2. Start the frontend:
-
-```bash
-npm run dev
-```
+    npm run dev
 
 3. Build for production:
 
-```bash
-npm run build
-```
+    npm run build
 
 4. Preview the production build:
 
-```bash
-npm run preview
-```
+    npm run preview
 
 ## Scheduler Setup
 

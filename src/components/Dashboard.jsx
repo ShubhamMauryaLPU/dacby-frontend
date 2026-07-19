@@ -536,7 +536,7 @@ const Dashboard = () => {
                           </td>
                           <td className="py-4 px-4">
                             <div
-                              className="text-slate-350 text-slate-300 truncate max-w-[160px]"
+                              className="text-slate-350 text-slate-300 truncate max-w-40"
                               title={ord.productName}
                             >
                               {ord.productName}
