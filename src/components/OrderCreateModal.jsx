@@ -12,7 +12,6 @@ const OrderCreateModal = ({ isOpen, onClose, onOrderCreated }) => {
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
-  // Generate a new idempotency key when modal opens
   useEffect(() => {
     if (isOpen) {
       setIdempotencyKey(
@@ -67,23 +66,20 @@ const OrderCreateModal = ({ isOpen, onClose, onOrderCreated }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
-      <div className="relative bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden text-slate-100 transform transition-all duration-300 scale-100">
-        {/* Header decoration */}
-        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div className="relative bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden text-slate-100">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-500" />
 
-        <div className="px-6 pt-8 pb-4 flex justify-between items-center border-b border-slate-800">
+        <div className="px-6 pt-7 pb-4 flex justify-between items-center border-b border-slate-800/80">
           <div>
-            <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">
-              Place New Order
-            </h3>
-            <p className="text-xs text-slate-400 mt-1">
+            <h3 className="text-lg font-bold text-white">Place New Order</h3>
+            <p className="text-xs text-slate-400 mt-0.5">
               Submit order with built-in idempotency protection
             </p>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-100 transition-colors p-2 hover:bg-slate-800 rounded-full cursor-pointer"
+            className="text-slate-400 hover:text-slate-105 hover:text-white transition-colors p-2 hover:bg-slate-800 rounded-full cursor-pointer"
             aria-label="Close modal"
           >
             <svg
@@ -104,9 +100,9 @@ const OrderCreateModal = ({ isOpen, onClose, onOrderCreated }) => {
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="bg-red-950/40 border border-red-800/60 text-red-300 px-4 py-3 rounded-xl text-sm flex items-center space-x-2">
+            <div className="bg-red-950/20 border border-red-905 border-red-900/30 text-red-400 px-4 py-3 rounded-xl text-sm flex items-center space-x-2">
               <svg
-                className="w-4 h-4 text-red-405 text-red-400 shrink-0"
+                className="w-4 h-4 text-red-400 shrink-0"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
@@ -123,9 +119,9 @@ const OrderCreateModal = ({ isOpen, onClose, onOrderCreated }) => {
           )}
 
           {successMsg && (
-            <div className="bg-emerald-950/40 border border-emerald-800/60 text-emerald-300 px-4 py-3 rounded-xl text-sm flex items-center space-x-2">
+            <div className="bg-emerald-950/20 border border-emerald-905 border-emerald-900/30 text-emerald-450 text-emerald-400 px-4 py-3 rounded-xl text-sm flex items-center space-x-2">
               <svg
-                className="w-4 h-4 text-emerald-405 text-emerald-400 shrink-0"
+                className="w-4 h-4 text-emerald-400 shrink-0"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
@@ -141,7 +137,7 @@ const OrderCreateModal = ({ isOpen, onClose, onOrderCreated }) => {
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
                 Customer Name
@@ -151,7 +147,7 @@ const OrderCreateModal = ({ isOpen, onClose, onOrderCreated }) => {
                 placeholder="e.g. Gaurav Mishra"
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-medium"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium"
               />
             </div>
 
@@ -164,12 +160,12 @@ const OrderCreateModal = ({ isOpen, onClose, onOrderCreated }) => {
                 placeholder="e.g. +91 9999999999"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-505 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-mono"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
                 Product Name
@@ -179,7 +175,7 @@ const OrderCreateModal = ({ isOpen, onClose, onOrderCreated }) => {
                 placeholder="e.g. Premium Subscription"
                 value={productName}
                 onChange={(e) => setProductName(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-505 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-medium"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium"
               />
             </div>
 
@@ -193,12 +189,12 @@ const OrderCreateModal = ({ isOpen, onClose, onOrderCreated }) => {
                 value={amount}
                 min="0"
                 onChange={(e) => setAmount(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-202 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-mono"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
                 Payment Status
@@ -206,7 +202,7 @@ const OrderCreateModal = ({ isOpen, onClose, onOrderCreated }) => {
               <select
                 value={paymentStatus}
                 onChange={(e) => setPaymentStatus(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all select-dark font-semibold text-slate-350"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
               >
                 <option value="PENDING">PENDING</option>
                 <option value="PAID">PAID</option>
@@ -223,12 +219,12 @@ const OrderCreateModal = ({ isOpen, onClose, onOrderCreated }) => {
                 type="text"
                 disabled
                 value={idempotencyKey}
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-500 italic select-none cursor-not-allowed font-mono"
+                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-500 font-mono select-none cursor-not-allowed"
               />
             </div>
           </div>
 
-          <div className="pt-4 flex items-center justify-end space-x-3 border-t border-slate-800 mt-6 shrink-0">
+          <div className="pt-4 flex items-center justify-end space-x-3 border-t border-slate-800/80 mt-6">
             <button
               type="button"
               onClick={onClose}
@@ -239,10 +235,10 @@ const OrderCreateModal = ({ isOpen, onClose, onOrderCreated }) => {
             <button
               type="submit"
               disabled={loading}
-              className="relative px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-sm font-semibold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all duration-200 flex items-center justify-center min-w-[120px] disabled:opacity-55 disabled:cursor-not-allowed cursor-pointer"
+              className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 disabled:cursor-not-allowed text-white rounded-xl text-sm font-semibold shadow-md shadow-blue-500/10 hover:shadow-blue-500/20 transition-all cursor-pointer"
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-white/35 border-t-white rounded-full animate-spin"></div>
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
               ) : (
                 "Place Order"
               )}

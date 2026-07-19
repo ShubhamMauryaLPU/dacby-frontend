@@ -8,11 +8,8 @@ import SchedulerDashboard from "./SchedulerDashboard";
 const Dashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
-  // Navigation tab state derived from URL route path
   const activeTab = location.pathname === "/scheduler" ? "scheduler" : "orders";
 
-  // Orders table states
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -25,7 +22,6 @@ const Dashboard = () => {
     total: 0,
   });
 
-  // Stats summaries
   const [stats, setStats] = useState({
     total: 0,
     placed: 0,
@@ -33,37 +29,33 @@ const Dashboard = () => {
     ready: 0,
   });
 
-  // Auto-refresh state
   const [autoRefreshSecs, setAutoRefreshSecs] = useState(30);
   const [countdown, setCountdown] = useState(30);
-
-  // Modals state
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
-
-  // Auto-refresh timer reference
   const countdownIntervalRef = useRef(null);
 
-  // Fetch orders and stats
   useEffect(() => {
     if (activeTab === "orders") {
       fetchOrders();
     }
   }, [statusFilter, searchQuery, page, activeTab]);
 
-  // Setup auto-refresh countdown
   useEffect(() => {
     setCountdown(autoRefreshSecs);
   }, [autoRefreshSecs]);
 
   useEffect(() => {
-    if (countdownIntervalRef.current)
+    if (countdownIntervalRef.current) {
       clearInterval(countdownIntervalRef.current);
+    }
 
     countdownIntervalRef.current = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
-          if (activeTab === "orders") fetchOrders();
+          if (activeTab === "orders") {
+            fetchOrders();
+          }
           return autoRefreshSecs;
         }
         return prev - 1;
@@ -92,7 +84,6 @@ const Dashboard = () => {
       const data = response.data;
       setOrders(data.data || []);
       setPagination(data.pagination || { page: 1, totalPages: 1, total: 0 });
-
       fetchStats();
     } catch (err) {
       setError(
@@ -115,7 +106,6 @@ const Dashboard = () => {
           .catch(() => 0),
       );
 
-      // fetch total
       const totalFetch = api
         .get("/v1/orders", { params: { limit: 1 } })
         .then((res) => res.data.pagination?.total || 0)
@@ -150,43 +140,43 @@ const Dashboard = () => {
     switch (String(status).toUpperCase()) {
       case "PLACED":
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-500/10 border border-blue-550/25 text-blue-400">
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/10 border border-blue-500/20 text-blue-400">
             Placed
           </span>
         );
       case "PROCESSING":
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/10 border border-amber-550/25 text-amber-400">
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 border border-amber-500/20 text-amber-400">
             Processing
           </span>
         );
       case "READY_TO_SHIP":
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-500/10 border border-indigo-550/25 text-indigo-400">
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
             Ready to Ship
           </span>
         );
       case "SHIPPED":
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-500/10 border border-purple-550/25 text-purple-400">
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-500/10 border border-purple-500/20 text-purple-400">
             Shipped
           </span>
         );
       case "DELIVERED":
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/10 border border-emerald-550/25 text-emerald-400">
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
             Delivered
           </span>
         );
       case "CANCELLED":
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-500/10 border border-red-550/25 text-red-400">
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-500/10 border border-red-500/20 text-red-400">
             Cancelled
           </span>
         );
       default:
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-500/10 border border-slate-550/25 text-slate-400">
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-500/10 border border-slate-500/20 text-slate-400">
             {status}
           </span>
         );
@@ -197,29 +187,29 @@ const Dashboard = () => {
     switch (String(status).toUpperCase()) {
       case "PAID":
         return (
-          <span className="text-emerald-400 flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 font-bold"></span>
+          <span className="text-emerald-400 flex items-center gap-1.5 font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
             Paid
           </span>
         );
       case "PENDING":
         return (
-          <span className="text-amber-400 flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 font-bold"></span>
+          <span className="text-amber-400 flex items-center gap-1.5 font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
             Pending
           </span>
         );
       case "FAILED":
         return (
-          <span className="text-red-400 flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-red-500 font-bold"></span>
+          <span className="text-red-400 flex items-center gap-1.5 font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
             Failed
           </span>
         );
       case "REFUNDED":
         return (
-          <span className="text-blue-400 flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 font-bold"></span>
+          <span className="text-blue-400 flex items-center gap-1.5 font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
             Refunded
           </span>
         );
@@ -229,29 +219,26 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 font-sans text-slate-250 select-none pb-12">
-      {/* Top Banner Gradient */}
-      <div className="h-64 w-full bg-gradient-to-r from-blue-900 via-slate-900 to-indigo-900 absolute top-0 left-0 z-0 opacity-40 blur-2xl pointer-events-none" />
+    <div className="min-h-screen bg-slate-950 text-slate-100 pb-12 font-sans selection:bg-blue-500/30">
+      <div className="h-96 w-full bg-linear-to-b from-blue-900/10 via-indigo-900/5 to-transparent absolute top-0 left-0 z-0 pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-8 space-y-8">
-        {/* Navigation / Header */}
-        <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-900 pb-6 shrink-0">
-          <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-white bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-8 space-y-4">
+        <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-900 pb-5">
+          <div className="space-y-1">
+            <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-2.5">
               Dacby <span className="text-blue-500 font-light">OrderFlow</span>
             </h1>
-            <p className="text-sm text-slate-450 mt-1 text-slate-400">
+            <p className="text-sm text-slate-450 text-slate-400">
               Operations Control Panel & Cloud Scheduler Monitor
             </p>
           </div>
 
-          {/* Tab buttons tied to react-router routes */}
-          <div className="flex items-center space-x-2 bg-slate-900/80 border border-slate-800 p-1 rounded-2xl">
+          <div className="flex items-center space-x-1.5 bg-slate-900/60 border border-slate-800 p-1 rounded-2xl backdrop-blur-md">
             <button
               onClick={() => navigate("/")}
               className={`px-5 py-2 text-sm font-semibold rounded-xl transition-all cursor-pointer ${
                 activeTab === "orders"
-                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/15"
                   : "text-slate-400 hover:text-slate-200"
               }`}
             >
@@ -261,7 +248,7 @@ const Dashboard = () => {
               onClick={() => navigate("/scheduler")}
               className={`px-5 py-2 text-sm font-semibold rounded-xl transition-all cursor-pointer ${
                 activeTab === "scheduler"
-                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/15"
                   : "text-slate-400 hover:text-slate-200"
               }`}
             >
@@ -270,29 +257,13 @@ const Dashboard = () => {
           </div>
         </header>
 
-        {/* Stats summary widgets (Only visible in orders tab) */}
         {activeTab === "orders" && (
           <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-slate-900 border border-slate-800/85 hover:border-slate-700/80 transition-all rounded-3xl p-5 shadow-lg relative group overflow-hidden">
-              <div className="absolute top-0 right-0 p-3 opacity-15 group-hover:scale-110 transition-transform">
-                <svg
-                  className="w-16 h-16 text-indigo-500"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
-                  />
-                </svg>
-              </div>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+            <div className="bg-slate-900/40 border border-slate-800 rounded-3xl p-5 hover:border-slate-700 transition-all shadow-md group relative overflow-hidden backdrop-blur-sm">
+              <p className="text-xs font-bold text-slate-450 text-slate-400 uppercase tracking-wider">
                 Total Entries
               </p>
-              <h3 className="text-3xl font-extrabold text-white mt-2">
+              <h3 className="text-3xl font-extrabold text-white mt-2 transition-transform group-hover:translate-x-0.5 duration-200">
                 {stats.total}
               </h3>
             </div>
@@ -301,31 +272,16 @@ const Dashboard = () => {
               onClick={() =>
                 setStatusFilter(statusFilter === "PLACED" ? "" : "PLACED")
               }
-              className={`bg-slate-900 border transition-all rounded-3xl p-5 shadow-lg relative group cursor-pointer overflow-hidden ${
+              className={`bg-slate-900/40 border rounded-3xl p-5 cursor-pointer transition-all shadow-md group relative overflow-hidden backdrop-blur-sm ${
                 statusFilter === "PLACED"
-                  ? "border-blue-500 bg-slate-900/90 shadow-blue-500/5"
-                  : "border-slate-800/85 hover:border-slate-700/80"
+                  ? "border-blue-500 bg-blue-500/5 shadow-blue-500/5"
+                  : "border-slate-800 hover:border-slate-700"
               }`}
             >
-              <div className="absolute top-0 right-0 p-3 opacity-15 group-hover:scale-110 transition-transform">
-                <svg
-                  className="w-16 h-16 text-blue-500"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <p className="text-xs font-bold text-blue-400 uppercase tracking-widest">
+              <p className="text-xs font-bold text-blue-400 uppercase tracking-wider">
                 Placed Status
               </p>
-              <h3 className="text-3xl font-extrabold text-white mt-2">
+              <h3 className="text-3xl font-extrabold text-white mt-2 transition-transform group-hover:translate-x-0.5 duration-200">
                 {stats.placed}
               </h3>
             </div>
@@ -336,31 +292,16 @@ const Dashboard = () => {
                   statusFilter === "PROCESSING" ? "" : "PROCESSING",
                 )
               }
-              className={`bg-slate-900 border transition-all rounded-3xl p-5 shadow-lg relative group cursor-pointer overflow-hidden ${
+              className={`bg-slate-900/40 border rounded-3xl p-5 cursor-pointer transition-all shadow-md group relative overflow-hidden backdrop-blur-sm ${
                 statusFilter === "PROCESSING"
-                  ? "border-amber-500 bg-slate-900/90 shadow-amber-500/5"
-                  : "border-slate-800/85 hover:border-slate-700/80"
+                  ? "border-amber-500 bg-amber-500/5 shadow-amber-500/5"
+                  : "border-slate-800 hover:border-slate-700"
               }`}
             >
-              <div className="absolute top-0 right-0 p-3 opacity-15 group-hover:scale-110 transition-transform">
-                <svg
-                  className="w-16 h-16 text-amber-500"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
-                  />
-                </svg>
-              </div>
-              <p className="text-xs font-bold text-amber-400 uppercase tracking-widest">
+              <p className="text-xs font-bold text-amber-400 uppercase tracking-wider">
                 Processing
               </p>
-              <h3 className="text-3xl font-extrabold text-white mt-2">
+              <h3 className="text-3xl font-extrabold text-white mt-2 transition-transform group-hover:translate-x-0.5 duration-200">
                 {stats.processing}
               </h3>
             </div>
@@ -371,46 +312,28 @@ const Dashboard = () => {
                   statusFilter === "READY_TO_SHIP" ? "" : "READY_TO_SHIP",
                 )
               }
-              className={`bg-slate-900 border transition-all rounded-3xl p-5 shadow-lg relative group cursor-pointer overflow-hidden ${
+              className={`bg-slate-900/40 border rounded-3xl p-5 cursor-pointer transition-all shadow-md group relative overflow-hidden backdrop-blur-sm ${
                 statusFilter === "READY_TO_SHIP"
-                  ? "border-indigo-500 bg-slate-900/90 shadow-indigo-500/5"
-                  : "border-slate-800/85 hover:border-slate-700/80"
+                  ? "border-indigo-500 bg-indigo-500/5 shadow-indigo-500/5"
+                  : "border-slate-800 hover:border-slate-700"
               }`}
             >
-              <div className="absolute top-0 right-0 p-3 opacity-15 group-hover:scale-110 transition-transform">
-                <svg
-                  className="w-16 h-16 text-indigo-500"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.12-1.243l1.094-10.42a1.125 1.125 0 011.12-.98h15.262a1.125 1.125 0 011.12.98l1.093 10.419a1.125 1.125 0 01-1.12 1.243H14.25m0 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0H9"
-                  />
-                </svg>
-              </div>
-              <p className="text-xs font-bold text-indigo-400 uppercase tracking-widest">
+              <p className="text-xs font-bold text-indigo-400 uppercase tracking-wider">
                 Ready to Ship
               </p>
-              <h3 className="text-3xl font-extrabold text-white mt-2">
+              <h3 className="text-3xl font-extrabold text-white mt-2 transition-transform group-hover:translate-x-0.5 duration-200">
                 {stats.ready}
               </h3>
             </div>
           </section>
         )}
 
-        {/* Tab Content Display */}
         {activeTab === "scheduler" ? (
           <SchedulerDashboard />
         ) : (
-          <div className="space-y-6 animate-fade-in">
-            {/* Filter and Control Toolbar */}
-            <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-3xl flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+          <div className="space-y-6">
+            <div className="bg-slate-900/40 border border-slate-800 p-4 rounded-3xl flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 backdrop-blur-sm">
               <div className="flex flex-col sm:flex-row gap-3 grow">
-                {/* Search query input */}
                 <div className="relative flex-1">
                   <input
                     type="text"
@@ -420,11 +343,11 @@ const Dashboard = () => {
                       setSearchQuery(e.target.value);
                       setPage(1);
                     }}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                   />
-                  <div className="absolute left-3.5 top-3.5 text-slate-650">
+                  <div className="absolute left-3.5 top-3.5 text-slate-500">
                     <svg
-                      className="w-4 h-4 text-slate-500"
+                      className="w-4 h-4"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2.5"
@@ -439,15 +362,14 @@ const Dashboard = () => {
                   </div>
                 </div>
 
-                {/* Status Dropdown */}
-                <div className="relative">
+                <div>
                   <select
                     value={statusFilter}
                     onChange={(e) => {
                       setStatusFilter(e.target.value);
                       setPage(1);
                     }}
-                    className="w-full sm:w-48 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-slate-200 select-dark"
+                    className="w-full sm:w-48 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-slate-200"
                   >
                     <option value="">All Statuses</option>
                     <option value="PLACED">Placed</option>
@@ -460,9 +382,7 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Refresh and Action buttons */}
               <div className="flex items-center gap-3 shrink-0">
-                {/* Auto Refresh indicator */}
                 <div className="hidden lg:flex items-center space-x-2 bg-slate-950 border border-slate-800 px-3.5 py-2.5 rounded-xl text-xs text-slate-400">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-ping"></span>
                   <span>
@@ -473,11 +393,10 @@ const Dashboard = () => {
                     s
                   </span>
 
-                  {/* Dropdown to adjust poll rate */}
                   <select
                     value={autoRefreshSecs}
                     onChange={(e) => setAutoRefreshSecs(Number(e.target.value))}
-                    className="bg-transparent border-0 font-bold focus:outline-none text-[10px] ml-1.5 text-slate-300"
+                    className="bg-transparent border-0 font-bold focus:outline-none text-[10px] ml-1.5 text-slate-300 cursor-pointer"
                   >
                     <option value="15">15s</option>
                     <option value="30">30s</option>
@@ -488,7 +407,7 @@ const Dashboard = () => {
                 <button
                   onClick={fetchOrders}
                   disabled={loading}
-                  className="p-3 border border-slate-800 bg-slate-950/80 hover:bg-slate-800 text-slate-400 hover:text-white rounded-xl transition-all"
+                  className="p-3 border border-slate-800 bg-slate-950/80 hover:bg-slate-800 text-slate-400 hover:text-white rounded-xl transition-all cursor-pointer"
                   title="Manual refresh"
                 >
                   <svg
@@ -508,7 +427,7 @@ const Dashboard = () => {
 
                 <button
                   onClick={() => setIsCreateOpen(true)}
-                  className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold rounded-xl text-sm flex items-center gap-1.5 shadow-md shadow-blue-500/10 hover:shadow-blue-550/20 transition-all cursor-pointer"
+                  className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-sm flex items-center gap-1.5 shadow-md shadow-blue-500/10 hover:shadow-blue-500/20 transition-all cursor-pointer"
                 >
                   <svg
                     className="w-4 h-4"
@@ -528,27 +447,25 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Error alerts */}
             {error && (
-              <div className="bg-red-950/30 border border-red-900/40 text-red-300 px-4 py-3 rounded-2xl text-sm flex items-center space-x-2">
+              <div className="bg-red-950/20 border border-red-900/30 text-red-400 px-4 py-3 rounded-2xl text-sm flex items-center space-x-2">
                 <span>⚠️ {error}</span>
               </div>
             )}
 
-            {/* Orders Table Container */}
-            <div className="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-xl">
+            <div className="bg-slate-900/20 border border-slate-800 rounded-3xl overflow-hidden shadow-lg backdrop-blur-sm">
               {loading && orders.length === 0 ? (
                 <div className="py-24 text-center text-slate-500 flex flex-col items-center justify-center space-y-4">
-                  <div className="w-10 h-10 border-4 border-transparent border-t-blue-500 rounded-full animate-spin"></div>
+                  <div className="w-9 h-9 border-3 border-transparent border-t-blue-500 rounded-full animate-spin"></div>
                   <p className="text-sm font-medium">
                     Scanning catalog records...
                   </p>
                 </div>
               ) : orders.length === 0 ? (
-                <div className="py-24 text-center space-y-3.5">
-                  <div className="w-16 h-16 bg-slate-950/80 border border-slate-800 rounded-2xl flex items-center justify-center mx-auto text-slate-650 shadow-inner">
+                <div className="py-20 text-center space-y-3.5">
+                  <div className="w-14 h-14 bg-slate-950 border border-slate-800 rounded-2xl flex items-center justify-center mx-auto text-slate-500">
                     <svg
-                      className="w-8 h-8"
+                      className="w-7 h-7"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="1.5"
@@ -572,7 +489,7 @@ const Dashboard = () => {
                   <div>
                     <button
                       onClick={() => setIsCreateOpen(true)}
-                      className="px-4 py-2 bg-slate-805 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-850 border-slate-700 text-xs font-semibold rounded-xl transition-all cursor-pointer"
+                      className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-semibold rounded-xl transition-all cursor-pointer"
                     >
                       Place First Order
                     </button>
@@ -582,7 +499,7 @@ const Dashboard = () => {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="bg-slate-950/40 text-slate-400 text-[10px] font-bold uppercase tracking-wider border-b border-slate-855 border-slate-800">
+                      <tr className="bg-slate-950/40 text-slate-400 text-[10px] font-bold uppercase tracking-wider border-b border-slate-800/80">
                         <th className="py-4 px-6">Order ID & Date</th>
                         <th className="py-4 px-4">Customer Info</th>
                         <th className="py-4 px-4">Item Details</th>
@@ -592,11 +509,11 @@ const Dashboard = () => {
                         <th className="py-4 px-6 text-center">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800/50 text-xs">
+                    <tbody className="divide-y divide-slate-800/40 text-xs">
                       {orders.map((ord) => (
                         <tr
                           key={ord.orderId}
-                          className="hover:bg-slate-950/20 transition-all"
+                          className="hover:bg-slate-900/30 transition-colors group"
                         >
                           <td className="py-4 px-6">
                             <span
@@ -610,7 +527,7 @@ const Dashboard = () => {
                             </span>
                           </td>
                           <td className="py-4 px-4">
-                            <div className="font-semibold text-slate-205 text-slate-200">
+                            <div className="font-semibold text-slate-200">
                               {ord.customerName}
                             </div>
                             <div className="text-[10px] text-slate-500 font-mono mt-0.5">
@@ -628,7 +545,7 @@ const Dashboard = () => {
                           <td className="py-4 px-4 text-right font-bold text-white font-mono">
                             ₹{Number(ord.amount).toLocaleString("en-IN")}
                           </td>
-                          <td className="py-4 px-4 text-center select-none">
+                          <td className="py-4 px-4 text-center">
                             {getStatusBadge(ord.orderStatus)}
                           </td>
                           <td className="py-4 px-4">
@@ -637,7 +554,7 @@ const Dashboard = () => {
                           <td className="py-4 px-6 text-center">
                             <button
                               onClick={() => setSelectedOrderId(ord.orderId)}
-                              className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-xl text-xs font-semibold transition-all hover:text-white cursor-pointer"
+                              className="px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 rounded-xl text-xs font-semibold transition-all hover:text-white cursor-pointer"
                             >
                               Timeline
                             </button>
@@ -649,9 +566,8 @@ const Dashboard = () => {
                 </div>
               )}
 
-              {/* Table Pagination controls */}
               {pagination.totalPages > 1 && (
-                <div className="px-6 py-4 bg-slate-950/10 border-t border-slate-800 flex justify-between items-center">
+                <div className="px-6 py-4 bg-slate-950/20 border-t border-slate-805 border-slate-800/60 flex justify-between items-center">
                   <span className="text-xs text-slate-500">
                     Showing page {page} of {pagination.totalPages} (
                     {pagination.total} entries)
@@ -660,14 +576,14 @@ const Dashboard = () => {
                     <button
                       disabled={page <= 1}
                       onClick={() => setPage((p) => p - 1)}
-                      className="px-3 py-1.5 bg-slate-800 border border-slate-700 hover:bg-slate-750 text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg text-xs transition-colors"
+                      className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg text-xs transition-colors cursor-pointer"
                     >
                       Previous
                     </button>
                     <button
                       disabled={page >= pagination.totalPages}
                       onClick={() => setPage((p) => p + 1)}
-                      className="px-3 py-1.5 bg-slate-800 border border-slate-700 hover:bg-slate-755 text-slate-350 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg text-xs transition-colors"
+                      className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg text-xs transition-colors cursor-pointer"
                     >
                       Next
                     </button>
@@ -679,14 +595,12 @@ const Dashboard = () => {
         )}
       </div>
 
-      {/* Creation Modal wrapper */}
       <OrderCreateModal
         isOpen={isCreateOpen}
         onClose={() => setIsCreateOpen(false)}
         onOrderCreated={handleOrderCreated}
       />
 
-      {/* Detail Modal Visualizer */}
       <OrderDetailModal
         isOpen={selectedOrderId !== null}
         onClose={() => setSelectedOrderId(null)}
