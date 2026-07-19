@@ -63,25 +63,5 @@ The assignment requires the status-update job to run every 5 minutes. Any cron-b
 
 ```bash
 POST /v1/scheduler/run-status-update
-Header: x-scheduler-secret: <your-secret>
+Header: x-scheduler-secret: secret
 ```
-
-Good options are GitHub Actions Cron, Render Cron Job, Railway Cron Job, Vercel Cron Job, or a local cron task for testing.
-
-## Suggested Backend Design
-
-If you are implementing the companion backend for this frontend, a clean design is:
-
-- Use MongoDB for flexible order documents and append-only history/log records
-- Store orders in one collection, status history in a separate collection, and scheduler executions in another collection
-- Keep a unique idempotency key on order creation to prevent duplicate submissions
-- Use atomic conditional updates when the scheduler changes status to avoid race conditions
-- Add indexes on `orderStatus`, `createdAt`, `updatedAt`, and any search fields used by the dashboard
-- Keep the scheduler stateless so multiple workers can run safely as long as the job is locked or idempotent
-
-## Notes For Submission
-
-- Include the backend source code in the final submission repository
-- Keep secrets in `.env` and never hardcode them in the client or server
-- Add a Postman collection or API documentation for the backend endpoints
-- Record a 5 to 10 minute Loom walkthrough explaining the API design, database design, scheduler flow, and duplicate-order protection
